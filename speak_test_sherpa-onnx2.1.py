@@ -9,7 +9,7 @@ def main():
     model_dir = "./model"
     mic_rate = 44100
     model_rate = 16000
-    TARGETS = ["你好", "開燈", "關燈", "指令"]
+    TARGETS = ["你好", "关灯", "开灯", "指令"]
     
     # 建立一個執行緒安全的隊列，用來存放音訊
     audio_queue = queue.Queue()
@@ -54,7 +54,7 @@ def main():
             text = (res.text if hasattr(res, 'text') else str(res)).replace(" ", "").strip()
             
             if text:
-                print(f"\r👂 聽到了: {text}\033[K", end="", flush=True)
+                print(f"\r👂 聽到了: {text[-20:]}\033[K", end="", flush=True)
                 
                 # 指令匹配
                 for t in TARGETS:

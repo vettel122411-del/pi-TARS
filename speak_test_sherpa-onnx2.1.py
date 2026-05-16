@@ -9,7 +9,7 @@ def main():
     model_dir = "./model"
     mic_rate = 44100
     model_rate = 16000
-    TARGETS = ["你好", "关灯", "开灯", "指令"]
+    TARGETS = ["停下", "向左", "向右", "向前"]
     
     # 建立一個執行緒安全的隊列，用來存放音訊
     audio_queue = queue.Queue()
@@ -35,7 +35,7 @@ def main():
     def recognition_worker():
         """專門負責 AI 辨識的線程，不會干擾音訊錄製"""
         stream = recognizer.create_stream()
-        print("🔥 [AI 線程] 已啟動，2.1GHz 四核全速運轉中...")
+        print("🔥 [AI 線程] 已啟動，四核全速運轉中...")
         
         while True:
             # 從隊列拿取音訊資料

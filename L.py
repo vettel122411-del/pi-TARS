@@ -5,7 +5,7 @@ import json
 
 import sys
 
-with open("config.json") as fp:
+with open("L.json") as fp:
 	config = json.load(fp)
 
 pca = ServoKit(channels=16)
@@ -24,15 +24,13 @@ if len(sys.argv) >= 2 and sys.argv[1]=="zeroing":
 sleep(1.0)
 
 while True:
-	pca.servo[0].angle = 180-35
 	pca.servo[1].angle = 35
-	sleep(0.6)
+	sleep(0.7)
 
 	if len(sys.argv) >= 2 and sys.argv[1]=="forward":
 		exit(0)
 
 	for da in range(35*5, 0, -1):
-		pca.servo[0].angle = 180-da/5
 		pca.servo[1].angle = da/5
 		sleep(5e-3)
 	

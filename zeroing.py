@@ -16,7 +16,7 @@ pca.servo[0].angle = 180
 pca.servo[1].angle = 0
 sleep(2)
 
-#exit(0)
+exit(0)
 
 while True:
 	pca.servo[0].angle = 180-35

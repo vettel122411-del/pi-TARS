@@ -45,8 +45,17 @@ zeroing()
 sleep(0.5)
 
 while True:
-	# move_forward()
-	#turn_right(0.2)
-	turn_left()
+	line = input()
 
+	for ch in line:
+		if ch == "w":
+			move_forward()
+		elif ch == "a":
+			turn_left()
+		elif ch == "d":
+			turn_right()
+		elif ch == "q":
+			break
 	
+	if ch == "q":
+		break

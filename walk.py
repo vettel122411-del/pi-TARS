@@ -18,10 +18,10 @@ def zeroing():
 	pca.servo[0].angle = 180-config["move"][0]["A0"]
 	pca.servo[1].angle = config["move"][1]["A0"]
 
-def move(rate_left=1.0, rate_right=1.0):
+def move(rate_left, rate_right, hold=0.4):
 	pca.servo[0].angle = 180-config["move"][0]["A0"] - config["move"][0]["A1"]
 	pca.servo[1].angle = config["move"][1]["A0"] + config["move"][1]["A1"]
-	sleep(0.4)
+	sleep(hold)
 
 	for s in range(config["misc"]["splits"]+1):
 		ratio = s/config["misc"]["splits"]
@@ -35,16 +35,17 @@ def move_forward():
 	move(1.0, 1.0)
 
 def turn_left(level=0.5):
-	move(1-level, 1)
+	move(1-level, 1, 0.75)
 
 def turn_right(level=0.5):
-	move(1, 1-level)
+	move(1, 1-level, 0.75)
 
 
 zeroing()
 sleep(0.5)
 
 while True:
+	zeroing()
 	line = input()
 
 	for ch in line:
@@ -56,6 +57,8 @@ while True:
 			turn_right()
 		elif ch == "q":
 			break
-	
+
+	zeroing()
+
 	if ch == "q":
 		break

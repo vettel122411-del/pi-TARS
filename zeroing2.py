@@ -14,8 +14,8 @@ for i in range(2):
 	pca.servo[i].set_pulse_width_range(config["range"][i]["lo"], (config["range"][i]["hi"]))
 
 
-pca.servo[0].angle = 180
-pca.servo[1].angle = 0
+pca.servo[0].angle = 180-config["move"][0]["A0"]
+pca.servo[1].angle = config["move"][1]["A0"]
 sleep(0.5)
 
 if len(sys.argv) >= 2 and sys.argv[1]=="zeroing":
@@ -24,16 +24,17 @@ if len(sys.argv) >= 2 and sys.argv[1]=="zeroing":
 sleep(1.0)
 
 while True:
-	pca.servo[0].angle = 180-35
-	pca.servo[1].angle = 35
+	pca.servo[0].angle = 180 -config["move"][0]["A0"] - config["move"][0]["A1"]
+	pca.servo[1].angle = config["move"][1]["A0"] + config["move"][1]["A1"]
 	sleep(0.6)
 
 	if len(sys.argv) >= 2 and sys.argv[1]=="forward":
 		exit(0)
 
-	for da in range(35*5, 0, -1):
-		pca.servo[0].angle = 180-da/5
-		pca.servo[1].angle = da/5
+	for da in range(config["misc"]["splits"], 0, -1):
+		ratio = da/config["misc"]["splits"]
+		pca.servo[0].angle = 180-config["move"][0]["A0"] - ratio*config["move"][0]["A1"]
+		pca.servo[1].angle = config["move"][1]["A0"] + ratio*config["move"][1]["A1"]
 		sleep(5e-3)
 	
 	sleep(0.4)

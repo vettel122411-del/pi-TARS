@@ -20,3 +20,37 @@
 在螢幕上我們找了一張眼睛原圖片，然後去做去背，用座標定位去做切割眼睛的範圍，再讓他去隨機的去撥放眼睛
 ![eye_image](./105724566.png)
 
+我們要去連結走路和語音識別的程式上我們用了docker來啟動redis服務，在 Redis 中，List（列表） 是一個雙向鏈結串列（Doubly Linked List）。它的特點是左右兩端插入與彈出速度極快，且元素允許重複並依插入順序排序。語音識別後的指令是RPUSH，但是停止指令適用LPUSH，讓它放在指令的最前面(插隊)。
+```python
+
+while True:
+	zeroing()
+
+	k,c = r.blpop("commands")
+	c = c.decode("utf-8")
+
+	print(c)
+
+	if c == "quit":
+		break
+	
+	elif c == "stop":
+		zeroing()
+		r.delete("commands")
+	
+	else:
+		if c == "forward":
+			move_forward()
+		elif c == "turn_left":
+			turn_left()
+		elif c == "turn_right":
+			turn_right()
+```
+在WALK裡取出是BLPOP從左邊拿指令，停止先歸零再把所有未執行指令再刪除，
+
+```python
+if len(r.lrange("commands", 0, -1)) == 0:
+	r.lpush("commands", c)
+```
+如果現在List是空的就會把最後的指令重新加回去List裡
+

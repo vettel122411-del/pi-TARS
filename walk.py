@@ -54,25 +54,27 @@ sleep(0.5)
 while True:
 	zeroing()
 
-	c = r.lpop("commands")
-	if c:
-		c = c.decode("utf-8")
-		print(c)
+	k,c = r.blpop("commands")
+	c = c.decode("utf-8")
 
-		if c == "stop":
-			zeroing()
-			r.delete("commands")
-		elif c == "forward":
+	print(c)
+
+	if c == "quit":
+		break
+	
+	elif c == "stop":
+		zeroing()
+		r.delete("commands")
+	
+	else:
+		if c == "forward":
 			move_forward()
 		elif c == "turn_left":
 			turn_left()
 		elif c == "turn_right":
 			turn_right()
-		elif c == "quit":
-			break
 
 		if len(r.lrange("commands", 0, -1)) == 0:
-			if c != "stop":
-				r.rpush("commands", c)
+			r.lpush("commands", c)
 
 	zeroing()

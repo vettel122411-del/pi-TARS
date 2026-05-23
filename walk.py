@@ -5,8 +5,14 @@ import json
 
 import sys
 
+import redis
+
+
 with open("config.json") as fp:
 	config = json.load(fp)
+
+r = redis.Redis(host='localhost', port=6379, db=0)
+r.delete("commands")
 
 pca = ServoKit(channels=16)
 
@@ -15,6 +21,7 @@ for i in range(2):
 
 
 def zeroing():
+	sleep(0.001)
 	pca.servo[0].angle = 180-config["move"][0]["A0"]
 	pca.servo[1].angle = config["move"][1]["A0"]
 
@@ -46,19 +53,19 @@ sleep(0.5)
 
 while True:
 	zeroing()
-	line = input()
 
-	for ch in line:
-		if ch == "w":
+	c = r.lpop("commands")
+	if c:
+		c = c.decode("utf-8")
+		print(c)
+
+		if c == "forward":
 			move_forward()
-		elif ch == "a":
+		elif c == "turn_left":
 			turn_left()
-		elif ch == "d":
+		elif c == "turn_right":
 			turn_right()
-		elif ch == "q":
+		elif c == "quit":
 			break
 
 	zeroing()
-
-	if ch == "q":
-		break

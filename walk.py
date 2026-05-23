@@ -36,7 +36,7 @@ def move(rate_left, rate_right, hold=0.4):
 		pca.servo[1].angle = config["move"][1]["A0"] + max(1-rate_right,1-ratio)*config["move"][1]["A1"]
 		sleep(5e-3)
 
-	sleep(0.3)
+	sleep(0.1)
 
 def move_forward():
 	move(1.0, 1.0)
@@ -59,7 +59,10 @@ while True:
 		c = c.decode("utf-8")
 		print(c)
 
-		if c == "forward":
+		if c == "stop":
+			zeroing()
+			r.delete("commands")
+		elif c == "forward":
 			move_forward()
 		elif c == "turn_left":
 			turn_left()
@@ -67,5 +70,9 @@ while True:
 			turn_right()
 		elif c == "quit":
 			break
+
+		if len(r.lrange("commands", 0, -1)) == 0:
+			if c != "stop":
+				r.rpush("commands", c)
 
 	zeroing()

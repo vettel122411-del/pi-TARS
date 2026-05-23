@@ -11,9 +11,9 @@ pca = ServoKit(channels=16)
 for i in range(2):
 	pca.servo[i].set_pulse_width_range(config["range"][i]["lo"], (config["range"][i]["hi"]))
 
-
-pca.servo[0].angle = 180
-pca.servo[1].angle = 0
+ANGLE = 0
+pca.servo[0].angle = 180-ANGLE
+pca.servo[1].angle = ANGLE
 sleep(2)
 
 exit(0)

@@ -5,11 +5,19 @@ import os
 import queue
 import threading
 
+import redis
+r = redis.Redis(host='localhost', port=6379, db=0)
+
+
 def main():
     model_dir = "./model"
     mic_rate = 44100
     model_rate = 16000
-    TARGETS = ["停下", "向左", "向右", "向前"]
+    TARGETS = [
+        "停下", "停止", 
+        "向左", "向右", 
+        "向前"
+    ]
     
     # 建立一個執行緒安全的隊列，用來存放音訊
     audio_queue = queue.Queue()
@@ -60,6 +68,16 @@ def main():
                 for t in TARGETS:
                     if t in text:
                         print(f"\n🎯 命中指令: {t}")
+
+                        if t == "向前":
+                            r.rpush("commands", "forward")
+                        elif t == "向左":
+                            r.rpush("commands", "turn_left")
+                        elif t == "向右":
+                            r.rpush("commands", "turn_right")
+                        else:
+                            r.lpush("commands", "stop")
+
                         recognizer.reset(stream)
                         break
             
